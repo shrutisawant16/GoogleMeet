@@ -49,6 +49,99 @@ var AppProcess = (function () {
       }
       isAudioMute = !isAudioMute;
     });
+    var AppProcess = (function () {
+      // ... (existing code)
+
+      var isCaptionOn = false;
+      var recognition;
+
+      function initSpeechRecognition() {
+        recognition = new webkitSpeechRecognition();
+        recognition.continuous = true;
+        recognition.interimResults = true;
+
+        recognition.onresult = function (event) {
+          var transcript = event.results[event.results.length - 1][0].transcript;
+          // Update UI or send the transcript to other peers
+          if (isCaptionOn) {
+            updateCaption(transcript);
+          }
+        };
+      }
+
+      function startSpeechRecognition() {
+        if (recognition) {
+          recognition.start();
+          console.log("Speech recognition started");
+        }
+      }
+
+      function stopSpeechRecognition() {
+        if (recognition) {
+          recognition.stop();
+          console.log("Speech recognition stopped");
+        }
+      }
+
+      function toggleCaption() {
+        isCaptionOn = !isCaptionOn;
+        if (isCaptionOn) {
+          startSpeechRecognition();
+        } else {
+          stopSpeechRecognition();
+        }
+        // Update UI to reflect the caption state (icon, etc.)
+        updateCaptionUI();
+      }
+
+      function updateCaption(transcript) {
+        // Update UI or send the transcript to other peers
+        console.log("Transcript:", transcript);
+        // Update the caption element with the transcript
+        $("#captionText").text(transcript);
+      }
+
+      function updateCaptionUI() {
+        var captionIcon = $("#captionOnOff");
+        if (isCaptionOn) {
+          captionIcon.html(
+            "<span class='material-icons' style='width:100%;'>closed_caption</span>"
+          );
+        } else {
+          captionIcon.html(
+            "<span class='material-icons' style='width:100%;'>closed_caption_off</span>"
+          );
+        }
+      }
+
+      // Initialize speech recognition
+      initSpeechRecognition();
+
+      // ... (existing code)
+
+      function eventProcess() {
+        // ... (existing code)
+
+        $("#captionOnOff").on("click", function () {
+          toggleCaption();
+        });
+      }
+
+      // ... (existing code)
+
+      return {
+        // ... (existing code)
+      };
+    })();
+
+    var MyApp = (function () {
+      // ... (existing code)
+
+      return {
+        // ... (existing code)
+      };
+    })();
+
     $("#videoCamOnOff").on("click", async function () {
       if (video_st == video_states.Camera) {
         await videoProcess(video_states.None);

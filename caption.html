@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Speech to Text Captioning</title>
+    <style>
+        #caption {
+            background-color: black;
+            color: white;
+            padding: 10px;
+            font-size: 18px;
+            display: none; /* Hide the caption by default */
+        }
+        
+        .caption-generated {
+            background-color: gray;
+            display: inline; /* Show the caption when generated */
+        }
+    </style>
+</head>
+<body>
+    <h1>Speech to Text Captioning</h1>
+    
+    <div id="caption"></div>
+    
+    <button id="toggleButton">Enable Caption</button>
+    
+    <script>
+        // Speech recognition API
+        const recognition = new webkitSpeechRecognition();
+        recognition.continuous = true;
+        recognition.interimResults = true;
+        
+        // Caption element
+        const captionElement = document.getElementById('caption');
+        
+        // Toggle button
+        const toggleButton = document.getElementById('toggleButton');
+        let isCaptionEnabled = false;
+        
+        toggleButton.addEventListener('click', () => {
+            if (isCaptionEnabled) {
+                toggleButton.textContent = 'Enable Caption';
+                isCaptionEnabled = false;
+            } else {
+                toggleButton.textContent = 'Disable Caption';
+                isCaptionEnabled = true;
+            }
+        });
+        
+        recognition.onresult = (event) => {
+            const results = event.results;
+            let transcript = '';
+            
+            for (let i = event.resultIndex; i < results.length; i++) {
+                if (results[i].isFinal) {
+                    transcript += results[i][0].transcript;
+                }
+            }
+            
+            if (isCaptionEnabled) {
+                captionElement.textContent = transcript;
+                captionElement.classList.add('caption-generated');
+                captionElement.style.display = 'inline'; // Show the caption
+            } else {
+                captionElement.classList.remove('caption-generated');
+                captionElement.style.display = 'none'; // Hide the caption
+            }
+        };
+        
+        recognition.start();
+    </script>
+</body>
+</html>

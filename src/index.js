@@ -6,18 +6,19 @@ const path=require("path")
 const jwt=require("jsonwebtoken")
 const cookieParser=require("cookie-parser")
 const bcryptjs=require("bcryptjs")
-
+const static_path=path.join(__filename, "../action.html")
 app.use(express.json())
 app.use(cookieParser())
 app.use(express.urlencoded({extended:false}))
 
-
+//console.log(path.join(__filename, "../action.html"))
 const tempelatePath=path.join(__dirname,"../tempelates")
 const publicPath=path.join(__dirname,"../public")
 
 app.set('view engine','hbs')
 app.set("views",tempelatePath)
 app.use(express.static(publicPath))
+app.use(express.static(static_path))
 
 
 
